@@ -13,7 +13,9 @@ networks:
 
 services:
   reaction-admin:
-    image: reactioncommerce/admin:4.0.0-beta.12
+    image: luiscelano/ec-admin:pre-launch
+    build:
+      context: .
     env_file:
       - ./.env
     networks:

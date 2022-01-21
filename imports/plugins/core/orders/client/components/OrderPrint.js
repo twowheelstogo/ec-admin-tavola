@@ -54,6 +54,14 @@ function OrderPrint(props) {
   const orderDate = new Date(order.createdAt).toLocaleDateString("en-US");
   const [currentShopId] = useCurrentShopId();
 
+  const printAddress = (address) => {
+    return {
+      fullName: address.description,
+      address1: address.address,
+      address2: address.reference
+    }
+  }
+
   return (
     <Fragment>
       <Helmet title={`Order #${order.referenceId} printable invoice`} />
@@ -97,19 +105,21 @@ function OrderPrint(props) {
               <Divider className={classes.dividerSpacing} />
             </Grid>
 
-            <Grid item xs={12}>
-              <Grid container>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h2" paragraph>Shipping address</Typography>
-                  <Address address={fulfillmentGroups[0].data.shippingAddress} />
+            {fulfillmentGroups[0].data && fulfillmentGroups[0].data.shippingAddress && (
+              <Grid item xs={12}>
+                <Grid container>
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="h2" paragraph>Shipping address</Typography>
+                    <Address address={printAddress(fulfillmentGroups[0].data.shippingAddress)} />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="h2" paragraph>Billing address</Typography>
+                    <Address address={printAddress(fulfillmentGroups[0].data.shippingAddress)} />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h2" paragraph>Billing address</Typography>
-                  <Address address={fulfillmentGroups[0].data.shippingAddress} />
-                </Grid>
+                <Divider className={classes.dividerSpacing} />
               </Grid>
-              <Divider className={classes.dividerSpacing} />
-            </Grid>
+            )}
 
             <Grid item xs={12}>
               <Typography variant="h2" paragraph>Payments</Typography>
@@ -124,10 +134,10 @@ function OrderPrint(props) {
                             {displayName}
                           </Typography>
                           <Typography variant="body2">
-                          Processor: {processor}
+                            Processor: {processor}
                           </Typography>
                           <Typography variant="body2">
-                          Transaction ID: {transactionId}
+                            Transaction ID: {transactionId}
                           </Typography>
                         </Grid>
                         <Grid item xs={6} md={6}>

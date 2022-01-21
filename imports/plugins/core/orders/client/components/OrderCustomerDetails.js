@@ -13,8 +13,9 @@ import Typography from "@material-ui/core/Typography";
  */
 function OrderCustomerDetails({ order }) {
   const { email, fulfillmentGroups } = order;
-  const { shippingAddress: { fullName, phone } } = fulfillmentGroups[0].data;
-
+  const { shippingAddress } = fulfillmentGroups[0].data || {};
+  const { fullName, phone } = shippingAddress || {};
+  
   return (
     <Card>
       <CardHeader

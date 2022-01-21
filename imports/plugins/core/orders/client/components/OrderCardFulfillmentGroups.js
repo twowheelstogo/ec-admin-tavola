@@ -159,6 +159,14 @@ class OrderCardFulfillmentGroups extends Component {
     return null;
   }
 
+  printAddress = (address) => {
+    return {
+      fullName: address.description,
+      address1: address.address,
+      address2: address.reference
+    }
+  }
+
   render() {
     const { classes, order } = this.props;
     const { fulfillmentGroups } = order;
@@ -166,7 +174,8 @@ class OrderCardFulfillmentGroups extends Component {
 
     return fulfillmentGroups.map((fulfillmentGroup, index) => {
       const currentGroupCount = index + 1;
-      const { data: { shippingAddress }, displayStatus, status } = fulfillmentGroup;
+      const { data, displayStatus, status } = fulfillmentGroup;
+      const { shippingAddress } = data || {};
 
       return (
         <Grid container key={fulfillmentGroup._id} spacing={4}>
@@ -215,12 +224,14 @@ class OrderCardFulfillmentGroups extends Component {
                   </Hidden>
                   <Grid className={classes.gridItemNeedingDivider} item xs={12} md={5}>
                     <Grid container spacing={4}>
-                      <Grid item xs={12} md={12}>
-                        <Typography paragraph variant="h4">
-                          {i18next.t("order.shippingAddress", "Shipping address")}
-                        </Typography>
-                        <Address address={shippingAddress} />
-                      </Grid>
+                      {shippingAddress && (
+                        <Grid item xs={12} md={12}>
+                          <Typography paragraph variant="h4">
+                            {i18next.t("order.shippingAddress", "Shipping address")}
+                          </Typography>
+                          <Address address={this.printAddress(shippingAddress)} />
+                        </Grid>
+                      )}
                       <Grid item xs={12} md={12}>
                         <Typography paragraph variant="h4">
                           {i18next.t("order.shippingMethod", "Shipping method")}
